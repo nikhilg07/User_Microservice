@@ -8,5 +8,7 @@ public interface UserService {
 
     void addUser(User user);
     List<User>getAllUsers();
+    User getUserByEmailandPassword(String emailId,String password);
+
 
 }
