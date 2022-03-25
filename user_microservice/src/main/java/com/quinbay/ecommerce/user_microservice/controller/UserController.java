@@ -3,10 +3,7 @@ package com.quinbay.ecommerce.user_microservice.controller;
 import com.quinbay.ecommerce.user_microservice.dto.User;
 import com.quinbay.ecommerce.user_microservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,8 +16,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping(value = "/addUser" , consumes = "application/json")
-    public void addUser(@RequestBody @Valid User user)
-    {
+    public void addUser(@RequestBody @Valid User user){
+
         userService.addUser(user);
     }
 
@@ -28,6 +25,11 @@ public class UserController {
     public List<User> getStudents(){
 
         return userService.getAllUsers();
+    }
+
+    @GetMapping(value = "/authenticate",produces = "application/json")
+    public User authenticate(@RequestParam String email,@RequestParam String password){
+        return userService.getUserByEmailandPassword(email,password);
     }
 
 
