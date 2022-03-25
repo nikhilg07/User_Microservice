@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -18,8 +19,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(User user){
-        UserEntity userEntity = new UserEntity(user.getId(),user.getEmail(),user.getName(),user.getPassword());
-        userRepository.save(userEntity);
+
+        Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(user.getEmail());
+
+        if(optionalUserEntity.isPresent()){
+            return;
+        }
+        else {
+            UserEntity userEntity = new UserEntity(user.getId(), user.getEmail(), user.getName(), user.getPassword());
+             userRepository.save(userEntity);
+        }
+
+
     }
 
     @Override
@@ -32,6 +43,28 @@ public class UserServiceImpl implements UserService {
             userResponseList.add(user);
         }
         return userResponseList;
+    }
+
+
+
+    @Override
+    public User getUserByEmailandPassword(String emailId,String password){
+
+        Optional<UserEntity> optionalUserEntity = userRepository.findByEmailAndPassword(emailId,password);
+
+
+
+        if(optionalUserEntity.isPresent()){
+            User user = new User(optionalUserEntity.get().getId(),optionalUserEntity.get().getEmail(),optionalUserEntity.get().getName(),optionalUserEntity.get().getPassword());
+            return user;
+
+        }
+        else {
+            throw new RuntimeException("Not Found");
+        }
+
+
+
     }
 
 
